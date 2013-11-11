@@ -1,0 +1,105 @@
+2013-08-22 11:42:58,052 - [INFO] - from play in main 
+Listening for HTTP on port 9000...
+
+2013-08-22 11:44:05,811 - [INFO] - from play in play-akka.actor.default-dispatcher-2 
+database [default] connected at jdbc:mysql://localhost/product_match_db?autoReconnect=true&autoReconnectForPools=true&interactiveClient=true&characterEncoding=UTF-8?useUnicode=yes&characterEncoding=UTF-8&connectionCollation=utf8_general_ci
+
+2013-08-22 11:44:05,953 - [INFO] - from play in play-akka.actor.default-dispatcher-2 
+Application started (Dev)
+
+2013-08-22 11:44:06,597 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Trial Id : bowker_11, Trial Desc bowker_11
+
+2013-08-22 11:44:07,257 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Prepared Statement : INSERT INTO product_match_db.trial_info(title, description, run_time, run_user, run_status)VALUES (?, ?, ?, ?, ? )
+
+2013-08-22 11:44:07,271 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Found max trial id : 445
+
+2013-08-22 11:44:08,056 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Inserted audit summary details for 100 itempairs in 0.169 seconds
+
+2013-08-22 11:44:08,726 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Inserted itempair audit details for 100 itempairs in 0.67 seconds
+
+2013-08-22 11:44:09,295 - [ERROR] - from application in play-akka.actor.actions-dispatcher-5 
+Failed to insert attributes for  itempair : 9781451616880, 16385782
+
+2013-08-22 11:44:10,111 - [ERROR] - from application in play-akka.actor.actions-dispatcher-5 
+Failed to insert attributes for  itempair : 9788424113032, 5678604
+
+2013-08-22 11:44:11,409 - [ERROR] - from application in play-akka.actor.actions-dispatcher-5 
+Failed to insert attributes for  itempair : 9781857597370, 16803745
+
+2013-08-22 11:44:11,544 - [INFO] - from application in play-akka.actor.actions-dispatcher-5 
+Inserted itempair attributes for 100 itempairs in 2.818 seconds 
+
+2013-08-22 11:46:47,158 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Found 36 itempairs with different match status between trial1 321 and trial2 320
+
+2013-08-22 11:56:26,433 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Trial Id : audit_final, Trial Desc audit_final
+
+2013-08-22 11:56:31,477 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Prepared Statement : INSERT INTO product_match_db.trial_info(title, description, run_time, run_user, run_status)VALUES (?, ?, ?, ?, ? )
+
+2013-08-22 11:56:31,478 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Found max trial id : 446
+
+2013-08-22 11:56:33,630 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert audit summary information for itempairs for trial 446
+
+2013-08-22 11:56:33,632 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted audit summary details for 250 itempairs in 0.105 seconds
+
+2013-08-22 11:56:35,055 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted itempair audit details for 250 itempairs in 1.422 seconds
+
+2013-08-22 11:56:38,873 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10316284, 45000208
+
+2013-08-22 11:56:40,911 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10402984, 36468654
+
+2013-08-22 11:56:41,939 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10448298, 78479544
+
+2013-08-22 11:56:42,097 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10449137, 33711822
+
+2013-08-22 11:56:44,557 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted itempair attributes for 250 itempairs in 9.502 seconds 
+
+2013-08-22 14:05:04,068 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Trial Id : auditfinal, Trial Desc auditfinal
+
+2013-08-22 14:05:09,178 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Prepared Statement : INSERT INTO product_match_db.trial_info(title, description, run_time, run_user, run_status)VALUES (?, ?, ?, ?, ? )
+
+2013-08-22 14:05:09,186 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Found max trial id : 447
+
+2013-08-22 14:05:14,608 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert audit summary information for itempairs for trial 447
+
+2013-08-22 14:05:14,610 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted audit summary details for 250 itempairs in 0.12 seconds
+
+2013-08-22 14:05:16,072 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted itempair audit details for 250 itempairs in 1.462 seconds
+
+2013-08-22 14:05:19,940 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10316284, 45000208
+
+2013-08-22 14:05:21,932 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10402984, 36468654
+
+2013-08-22 14:05:23,088 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10448298, 78479544
+
+2013-08-22 14:05:23,289 - [ERROR] - from application in play-akka.actor.actions-dispatcher-10 
+Failed to insert attributes for  itempair : 10449137, 33711822
+
+2013-08-22 14:05:26,914 - [INFO] - from application in play-akka.actor.actions-dispatcher-10 
+Inserted itempair attributes for 250 itempairs in 10.841 seconds 
+

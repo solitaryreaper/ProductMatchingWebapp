@@ -1,0 +1,39 @@
+@(errorOrigin : String, errorReason : String, errorDescription : String)
+
+@main(title = "Product Matching Framework Error Page") {
+<div class="container-fluid">
+<div class="navbar">
+	<div class="navbar-inner" id="error_bar">
+		<div>
+			<ul class="nav">
+				<li><b>ERROR REPORT !! </b></li>
+			</ul>
+
+		</div>
+	</div>
+</div> <!-- End of Error Bar -->
+
+<table id="error_table" name="error_table" class="table table-bordered table-striped table-condensed">
+
+	<tbody>
+	<tr>
+		<td>Error Origin</td>
+		<td class="alert alert-error">@errorOrigin</td>
+	</tr>
+	<tr>
+		<td>Error Summary</td>
+		<td class="alert alert-error">@errorReason</td>
+	</tr>
+	<tr>
+		<td class="span2">Error Details</td>
+		<td class="span10 alert alert-error">@errorDescription</td>
+	</tr>
+	<tr>
+		<td>Error Solution</td>
+		<td class="alert alert-error">Please update JIRA with this error and pg-dev would fix this asap !! </td>
+	</tr>
+	</tbody>
+
+</table>	
+</div>
+}

@@ -1,0 +1,92 @@
+@(productMatchTrials : List[models.db.ProductMatchTrial], trialNames : List[String])
+
+@import helper._
+@import com.walmart.productgenome.pairComparison.utils._
+
+@main(title = "Product Matching Trial Dashboard") {
+
+<!-- Trial dashboard tools  -->
+<!-- Diff Tool -->
+<form method="post" class="form-horizontal container" action="@routes.Dashboard.generateTrialDiff()" onsubmit="checkTrialNames()">
+	<select id="trial1_name" name ="trial1_name">
+	<option value="" disabled selected>Choose trial1 name ..</option>
+		@for(trialName <- trialNames) {
+			<option>@trialName</option>
+		}
+	</select>
+	<button type="submit" id="product_match_trial_diff" class="btn btn-primary" >Compare Trials</button>
+	<select id="trial2_name" name ="trial2_name">
+	<option value="" disabled selected>Choose trial2 name ..</option>	
+		@for(trialName <- trialNames) {
+			<option>@trialName</option>
+		}
+	</select>
+	<br/>
+</form>
+	
+<div id="error_message"></div>
+	
+<!-- Start the trial dashboard table here -->
+<table id="trialDashboardTable" class="table table-bordered table-condensed table-hover tablesorter">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Description</th>
+			<th>Run Time</th>
+			<th>Run User</th>
+			<th><i class="icon-thumbs-up"></i> (%)</th>
+			<th><i class="icon-thumbs-down"></i> (%) </th>
+		</tr>
+	</thead>
+	<tbody>
+		@if(productMatchTrials == null || productMatchTrials.isEmpty()) {
+			<tr><th colspan="7">No product match trial records found !! </th></tr>
+		}
+		
+		@if(productMatchTrials != null && !productMatchTrials.isEmpty()) {
+			@for(productMatchTrial <- productMatchTrials) {
+				<tr>
+					<td>@productMatchTrial.getTrialId()</td>
+					<td>@productMatchTrial.getTrialName()</td>
+					<td>@productMatchTrial.getTrialDescription()</td>
+					<td>@productMatchTrial.getRunTime()</td>
+					<td>@productMatchTrial.getRunUser()</td>
+					<td>@productMatchTrial.getMatchedItemPairsPercentage()</td>
+					<td>@productMatchTrial.getMismatchedItemPairsPercentage()</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+ 
+<script type="text/javascript">	   
+	
+	// validation when the trial diff form is submitted
+	$("#product_match_trial_diff").on("click" , function() {
+		var trial1Name = $("#trial1_name").val();
+		var trial2Name = $("#trial2_name").val();
+
+		// check if the two trial names have been selected or not ?
+		var message = "";
+		if(trial1Name == null || trial2Name == null ){
+			message = "ERROR . Please choose trial names to proceed !!";
+			$("#error_message").html('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a><strong>'+ message +'</strong></div>');
+			return false;
+		}
+
+		// check if the two trial names are same ?		
+		if(trial1Name == trial2Name) {
+			message = "ERROR. Please choose different trial names for comparison !!";
+			$("#error_message").html('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a><strong>'+ message +'</strong></div>');			
+			return false;
+		}
+
+		return true;
+	});
+	     
+     $(document).ready(function () {
+     	$("#trialDashboardTable").tablesorter({sortList : [[0, 0]]});
+     });
+</script>   
+}

@@ -1,0 +1,171 @@
+@(productMatchTrialDiff : models.db.ProductMatchTrialPairCompare)
+
+@import helper._
+@import org.apache.commons.collections.CollectionUtils;
+
+@main(title = "Product Matching Trials Diff Tool") {
+<!-- Start trial comparison summary here -->
+
+<!-- Start of summary comparison bar -->
+<div class="navbar">
+	<div class="navbar-inner">
+		<div>
+			<ul class="nav" rel="tooltip" data-placement="right" title="Shows detailed difference between the chosen trials ..">
+				<li><b><h4>PRODUCT MATCH TRIALS SUMMARY DETAIL</h4></b></li>
+			</ul>
+
+		</div>
+	</div>
+</div> <!-- End of summary comparison Bar -->
+
+<div class="container">
+<table id="productMatchSummaryTable" class="table table-hover table-condensed table-bordered tablesorter">
+	<thead>
+		<th>Trial1 '@productMatchTrialDiff.getTrial1Meta().getTrialName()' Summary</th>
+		<th>Trial2 '@productMatchTrialDiff.getTrial2Meta().getTrialName()' Summary</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="span6"><div id="trial1SummaryChart"></div></td>
+			<td class="span6"><div id="trial2SummaryChart"></div></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+<!-- Start trial comparison detail here -->
+
+<!-- Start of detail comparison bar -->
+<div class="navbar">
+	<div class="navbar-inner" >
+		<div>
+			<ul class="nav" rel="tooltip" data-placement="right" title="Shows summary difference between the chosen trials ..">
+				<li><b><h4>PRODUCT MATCH TRIALS DIFF DETAIL</h4></b></li>
+			</ul>
+
+		</div>
+	</div>
+</div> <!-- End of detail comparison bar -->
+
+<table id="productMatchDiffDetailTable" class="table table-hover table-condensed table-bordered tablesorter">
+@if(productMatchTrialDiff.getTrialDiffItemPairs() == null || productMatchTrialDiff.getTrialDiffItemPairs().isEmpty()) {
+	<thead>
+		<tr>
+			<th><strong></h1>No mismatch between the status of itempairs of trial '@productMatchTrialDiff.getTrial1Meta().getTrialName()' and '@productMatchTrialDiff.getTrial2Meta().getTrialName()'  !!</h2></th>
+		</tr>
+	</thead>
+} <!-- End of no mismatch itempairs block -->
+
+@if(productMatchTrialDiff.getTrialDiffItemPairs() != null && !productMatchTrialDiff.getTrialDiffItemPairs().isEmpty()) {
+	<thead>
+		<tr>
+			<th>@productMatchTrialDiff.getSourceItemDataSource()</th>
+			<th>@productMatchTrialDiff.getTargetItemDataSource()</th>
+			<th>Trial1 '@productMatchTrialDiff.getTrial1Meta().getTrialName()' Status</th>
+			<th>Trial2 '@productMatchTrialDiff.getTrial2Meta().getTrialName()' Status</th>
+			<th>Reason</th>
+			<th>Rule</th>
+			<th>Trial1 '@productMatchTrialDiff.getTrial1Meta().getTrialName()' Diff Subrules</th>
+			<th>Trial2 '@productMatchTrialDiff.getTrial2Meta().getTrialName()' Diff Subrules</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		@for(itemPairDiff <- productMatchTrialDiff.getTrialDiffItemPairs()) {
+			<tr>
+				<td class="span3">@itemPairDiff.getSourceItemName()</td>
+				<td class="span3">@itemPairDiff.getTargetItemName()</td>
+				
+				@if(itemPairDiff.isTrial1MatchStatus()) {
+					<td class="span1"><button class="btn btn-success btn-small"><i class="icon-ok"></i></button></td>
+					<td class="span1"><button class="btn btn-danger btn-small"><i class="icon-remove"></i></button></td>
+				}
+				
+				@if(!itemPairDiff.isTrial1MatchStatus()) {
+					<td class="span1"><button class="btn btn-danger btn-small"><i class="icon-remove"></i></button></td>
+					<td class="span1"><button class="btn btn-success btn-small"><i class="icon-ok"></i></button></td>
+				}
+
+				<td class="span2">@itemPairDiff.getDiffReason()</td>
+				<td class="span2">@itemPairDiff.getCommonRuleName()</td>
+				@if(CollectionUtils.isNotEmpty(itemPairDiff.getTrial1DiffSubruleDefinitions())) {
+					<td class="span3">
+						@for(trial1DiffSubrule <- itemPairDiff.getTrial1DiffSubruleDefinitions()) {
+							@trial1DiffSubrule
+						}					
+					</td>
+				}
+				@if(CollectionUtils.isEmpty(itemPairDiff.getTrial1DiffSubruleDefinitions())) {
+					<td class="span3"> NA </td>
+				}
+				
+				@if(CollectionUtils.isNotEmpty(itemPairDiff.getTrial2DiffSubruleDefinitions())) {
+					<td class="span3">
+						@for(trial2DiffSubrule <- itemPairDiff.getTrial2DiffSubruleDefinitions()) {
+							@trial2DiffSubrule
+						}										
+					</td>
+				}
+				@if(CollectionUtils.isEmpty(itemPairDiff.getTrial2DiffSubruleDefinitions())) {
+					<td class="span3"> NA </td>
+				}
+				
+			</tr>
+		}
+	</tbody>
+</table>
+} <!-- End of item pairs != null iteration -->
+
+<script type="text/javascript">
+     
+     function loadTrialDiffChart(trial1MatchItemPairs, trial1MismatchItemPairs, trial2MatchItemPairs, trial2MismatchItemPairs)
+     {
+     	var trial1TotalItemPairs = trial1MatchItemPairs + trial1MismatchItemPairs;
+     	var trial2TotalItemPairs = trial2MatchItemPairs + trial2MismatchItemPairs;
+     	
+     	// Set the default highchart parameters
+     	var options = getDefaultPieChartOptions();
+     	
+     	// Set options for Chart1
+     	var options1 = $.extend(true, {}, options);
+
+        options1.series[0].name = 'ItemPairs';
+        options1.title.text = 'Product Matching Results';
+        options1.subtitle.text = trial1TotalItemPairs.toString() + ' ItemPairs';
+        options1.chart.renderTo = 'trial1SummaryChart';
+		
+		var match_results1 = [];
+		match_results1.push(['Matched', trial1MatchItemPairs]);
+		match_results1.push(['Mismatched', trial1MismatchItemPairs]);
+ 	    options1.series[0].data = match_results1;
+
+     	// Set options for chart2
+     	var options2 = $.extend(true, {}, options);
+        options2.series[0].name = 'ItemPairs';
+        options2.title.text = 'Product Matching Results';
+        options2.subtitle.text = trial2TotalItemPairs.toString() + ' ItemPairs';        
+        options2.chart.renderTo = 'trial2SummaryChart';
+		
+		var match_results_trial2 = [];
+		match_results_trial2.push(['Matched', trial2MatchItemPairs]);
+		match_results_trial2.push(['Mismatched', trial2MismatchItemPairs]);
+ 	    options2.series[0].data = match_results_trial2;
+        
+        // Render the summary charts
+        var chart1 = new Highcharts.Chart(options1);
+        var chart2 = new Highcharts.Chart(options2);
+     }
+          
+     $(document).ready(function () {
+     	var trial1MatchItemPairs = @productMatchTrialDiff.getTrial1Meta().getMatchedPairs();
+     	var trial1MismatchItemPairs = @productMatchTrialDiff.getTrial1Meta().getMismatchedPairs();
+
+     	var trial2MatchItemPairs = @productMatchTrialDiff.getTrial2Meta().getMatchedPairs();
+     	var trial2MismatchItemPairs = @productMatchTrialDiff.getTrial2Meta().getMismatchedPairs();
+     	
+     	loadTrialDiffChart(trial1MatchItemPairs, trial1MismatchItemPairs, trial2MatchItemPairs , trial2MismatchItemPairs);
+     	
+     	$(".nav").tooltip();
+     });
+</script>
+}

@@ -1,0 +1,427 @@
+@( 
+	trialId : Integer,
+	matchItemPairs : Integer, mismatchItemPairs : Integer, 
+	passRulesStats : Map[String, String], passClausesStats : Map[String, String],
+	itemPairAuditData : List[com.walmart.productgenome.pairComparison.audit.ItemPairAuditDataCollector]
+) 
+
+@import helper._ 
+@import com.walmart.productgenome.pairComparison.utils.comparers.ComparersFactory;
+
+@main(title = "Product Matching Tool") {
+<!-- Product Matching Summary Audit here -->
+
+<!-- Start summary audit bar here -->
+<div class="navbar">
+	<div class="navbar-inner">
+		<div>
+			<ul class="nav">
+				<li><b><h4>PRODUCT MATCH TRIAL SUMMARY</h4></b></li>
+			</ul>
+
+		</div>
+	</div>
+</div> <!-- End of Summary Audit Bar -->
+
+<!-- Start summary audit table here -->
+<table id="matchSummaryTable" class="table table-bordered table-condensed">
+	<thead>
+		<th>OVERALL SUMMARY</th>
+		<th>RULE SUMMARY</th>
+		<th>SUBRULE SUMMARY</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<div id="matchSummaryGraph"></div>
+			</td>
+			<td>
+				<table id="ruleStatsTable" class="table table-hover table-bordered table-condensed tablesorter">
+					<thead>
+						<tr>
+							<th>Rule Name</th>
+							<th><i class="icon-thumbs-up"></i> &nbsp;&nbsp; % &nbsp;&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for((key, value) <- passRulesStats) {
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						}
+					</tbody>
+				</table>
+			</td>
+
+			<td>
+				<table id="clauseStatsTable" class="table table-hover table-bordered table-condensed tablesorter">
+					<thead>
+						<tr>
+							<th>Subrule Name</th>
+							<th><i class="icon-thumbs-up"></i> &nbsp;&nbsp; % &nbsp;&nbsp; </th>
+						</tr>
+					</thead>
+					<tbody>
+						@for((key, value) <- passClausesStats) {
+						<tr>
+							<td>@key</td>
+							<td>@value</td>
+						</tr>
+						}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table> <!--  End of Summary Audit Table -->
+
+<!-- Load the summary chart as soon as possible. Don't wait for complete DOM to be ready !! -->
+<script type="text/javascript">
+     // Loads the summary pie chart of the matching results
+     function loadSummaryChart(matchItemPairsCount, mismatchItemPairsCount) {
+     	
+     	// Set the default highchart parameters
+     	var options = getDefaultPieChartOptions();
+     	     	
+     	// Set parameters specific to this chart
+        options.series[0].name = 'Product Match';
+        options.title.text = 'Product Matching Results';
+        options.chart.renderTo = 'matchSummaryGraph';
+		
+		// Set the data to be displayed
+		var match_results = [];
+		match_results.push(['Matched', matchItemPairsCount]);
+		match_results.push(['Mismatched', mismatchItemPairsCount]);
+ 	    options.series[0].data = match_results;
+        
+        // Render the summary chart
+        var chart = new Highcharts.Chart(options);
+     }   
+
+     // load the pie chart
+     loadSummaryChart(@matchItemPairs, @mismatchItemPairs);
+</script>
+
+<!-- Product Matching Detailed Audit Here -->
+<div class="navbar">
+	<div class="navbar-inner">
+		<div>
+			<ul class="nav">
+				<li><b><h4>PRODUCT MATCH TRIAL DETAILS</h4></b></li>
+			</ul>
+
+		</div>
+	</div>
+</div> <!-- End of Detailed Audit Bar -->
+
+<div class="controls controls-row container">
+
+	<select id="itempairs_match_result_type" name="itempairs_match_result_type" class="span3">
+		<option value="mismatched" selected="selected">Show Mismatch ItemPairs</option>
+		<option value="matched">Show Match ItemPairs</option>
+		<option value="all">Show All ItemPairs</option>
+	</select> 
+	
+	<select id="token_match_result_type" name="token_match_result_type" class="span3">
+		<option value="all" selected="selected">Show All Tokens</option>	
+		<option value="failure">Show Failed Tokens</option>
+		<option value="success">Show Passed Tokens</option>
+	</select>
+	
+</div> <!-- End of filters here -->
+
+<table class="table table-bordered table-condensed"><tr><td>
+<div id="matchDetailedStats" class="container span12">
+		<!-- Start itempair iteration -->
+		@for(itemPairAudit <- itemPairAuditData) {
+			
+			<!-- Start a div that would contain finer audit data as children -->
+			@if(itemPairAudit.getStatus().toString() == "SUCCESS") {
+			<div class="itempair_success">
+			<i class="icon-plus-sign"></i>
+			<button class="btn btn-success"><i class="icon-thumbs-up"></i></button>
+				<form method="post" class="form-horizontal container pull-right" target="_blank"
+					  action="@routes.Matcher.showItemPairData()" >									
+					<input type="hidden" name="trial_id" value="@trialId">
+					<input type="hidden" name="source_item_id" value="@itemPairAudit.getItemPair().getSourceItem().getItemID()">
+					<input type="hidden" name="target_item_id" value="@itemPairAudit.getItemPair().getTargetItem().getItemID()">
+					<button type="submit" class="btn btn-primary">Show Data</button>
+				</form>
+				<table class="table-hover table-bordered table-condensed tablesorter">
+				<thead>
+					<tr>
+						<th width="50%">@itemPairAudit.getItemPair().getSourceItem().getSource()</th>
+						<th width="50%">@itemPairAudit.getItemPair().getTargetItem().getSource()</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td  width="50%">@itemPairAudit.getItemPair().getSourceItem().getName()</td>
+						<td  width="50%">@itemPairAudit.getItemPair().getTargetItem().getName()</td>
+					</tr>
+				</tbody>
+				</table>				
+			}
+			 
+			@if(itemPairAudit.getStatus().toString() == "FAILURE") {
+			<div class="itempair_failure">
+				<i class="icon-plus-sign"></i>
+				<button class="btn btn-danger"><i class="icon-thumbs-down"></i></button>
+				<form method="post" class="form-horizontal container pull-right" target="_blank"
+					  action="@routes.Matcher.showItemPairData()" >									
+					<input type="hidden" name="trial_id" value="@trialId">
+					<input type="hidden" name="source_item_id" value="@itemPairAudit.getItemPair().getSourceItem().getItemID()">
+					<input type="hidden" name="target_item_id" value="@itemPairAudit.getItemPair().getTargetItem().getItemID()">
+					<button type="submit" class="btn btn-primary">Show Data</button>
+				</form>
+				<table class="table-hover table-bordered table-condensed tablesorter">
+				<thead>
+					<tr>
+						<th width="50%">@itemPairAudit.getItemPair().getSourceItem().getSource()</th>
+						<th width="50%">@itemPairAudit.getItemPair().getTargetItem().getSource()</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td width="50%">@itemPairAudit.getItemPair().getSourceItem().getName()</td>
+						<td width="50%">@itemPairAudit.getItemPair().getTargetItem().getName()</td>
+					</tr>
+				</tbody>
+				</table>				
+			} 
+		
+			<!-- Start rule iteration -->
+			@for(ruleAudit <- itemPairAudit.getRuleAuditValues()) {
+				@if(ruleAudit.getStatus().toString() == "SUCCESS") {
+				<div class="rule_success">
+					<ul class="nav nav-pills"> 
+						<li> <button class="btn btn-small btn-success"><i class="icon-ok"></i></button> <b> &nbsp; &nbsp; RULE</b> =  @ruleAudit.getRule().getRuleName()</li>
+					</ul>
+				} 
+				@if(ruleAudit.getStatus().toString() == "FAILURE") {
+				<div class="rule_failure">
+					<ul class="nav nav-pills"> 
+						<li> <button class="btn btn-small btn-danger"><i class="icon-remove"></i></button> <b> &nbsp; &nbsp; RULE</b> =  @ruleAudit.getRule().getRuleName()</li>
+					</ul>
+				} 
+		
+				<!--  Start clause iteration -->
+				@for(clauseAudit <- ruleAudit.getClauseAuditValues()) {
+					<!-- Start clause != null check -->
+					@if(clauseAudit != null) { 
+						@if(clauseAudit.getStatus().toString() == "SUCCESS") {
+						<div class="clause_success">
+							<ul class="nav nav-pills" rel="popover"
+								data-original-title="<b>SUBRULE METADATA</b>"							
+								data-content="@(
+									"<b>TOKENIZER</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getSourceTokenizer().getClass().getSimpleName() + " <br /> " +
+									"<b>EVALUATOR</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getEvaluator().getClass().getSimpleName() + " <br />" +
+									"<b>COMPARER</b> = " + ComparersFactory.getComparersSubType(clauseAudit.getClause().getAttributeMatchClauseMeta().getComparers()) + " COMPARER " + " <br />" +																		
+									"<b>MISSING OKAY</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().isMissingOkay().toString().toUpperCase() + " <br />" +
+									"<b>SCORE</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getScoreThreshold().toString() + " <br />" +
+									clauseAudit.getSourceItem() + " <i class='icon-arrow-right'></i> " + clauseAudit.getTargetItem()
+								)"							> 
+								<!-- This slight hack has been done to reduce the number of DOM elements. Previously each element
+									 was being put in a list (li) element. But that was leading to too many list elements in DOM,
+									 so to fix that put everything in one list element as a curated string. -->
+								<li> 
+									<button class="btn btn-mini btn-success"><i class="icon-ok"></i></button>
+									&nbsp;        <b>SUBRULE</b> =  @clauseAudit.getClause().getClauseName()
+									&nbsp; &nbsp; <b>EXPECTED SCORE</b> = @clauseAudit.getClause().getAttributeMatchClauseMeta().getScoreThreshold().toString()
+									&nbsp; &nbsp; <b>CALCULATED SCORE</b> = @clauseAudit.getCalculatedScore().toString()
+								</li>
+							</ul>
+						} 
+						@if(clauseAudit.getStatus().toString() == "FAILURE") {
+						<div class="clause_failure">
+							<ul class="nav nav-pills" rel="popover" 
+								data-original-title="<b>SUBRULE METADATA</b>"
+								data-content="@(
+									"<b>TOKENIZER</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getSourceTokenizer().getClass().getSimpleName() + " <br /> " +
+									"<b>EVALUATOR</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getEvaluator().getClass().getSimpleName() + " <br />" +
+									"<b>COMPARER</b> = " + ComparersFactory.getComparersSubType(clauseAudit.getClause().getAttributeMatchClauseMeta().getComparers()) + " COMPARER " + " <br />" +																		
+									"<b>MISSING OKAY</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().isMissingOkay().toString().toUpperCase() + " <br />" +
+									"<b>SCORE</b> = " + clauseAudit.getClause().getAttributeMatchClauseMeta().getScoreThreshold().toString() + " <br />" +
+									clauseAudit.getSourceItem() + " <i class='icon-arrow-right'></i> " + clauseAudit.getTargetItem()
+								)"
+							>
+								<li> 
+									<button class="btn btn-mini btn-danger"><i class="icon-remove"></i></button>
+									&nbsp;        <b>SUBRULE</b> =  @clauseAudit.getClause().getClauseName()
+									&nbsp; &nbsp; <b>EXPECTED SCORE</b> = @clauseAudit.getClause().getAttributeMatchClauseMeta().getScoreThreshold().toString()
+									&nbsp; &nbsp; <b>CALCULATED SCORE</b> = @clauseAudit.getCalculatedScore().toString()
+								</li>
+							</ul>
+						} 
+				
+						<!-- Start token iteration -->
+						@if(clauseAudit.getAuditTokenValues() != null && !clauseAudit.getAuditTokenValues().isEmpty()) {
+									<table id="tokenTable" class="table table-hover table-bordered table-condensed tablesorter token" >
+										<thead>
+										<tr>
+											<th>Source Tokens</th>
+											<th>Target Tokens</th>
+											<th>Score</th>
+											<th>Reason</th>
+										</tr>	
+										</thead>
+										
+										<tbody rel="popover" data-original-title="<b>SUBRULE DATA TO MATCH</b>" 
+											data-content="@(clauseAudit.getClauseAttrValuesHTML())"
+										>
+											<!-- Start actual token iteration -->
+											@for(tokenAudit <- clauseAudit.getAuditTokenValues()) {
+												<!-- Start token != null check -->
+												@if(tokenAudit != null) {
+													@if(!tokenAudit.doesTokenNeedAnalysis()) {
+													<tr class="token_success">
+														<td>@tokenAudit.getSourceTokens()</td>
+														<td>@tokenAudit.getTargetTokens()</td>
+														<td>@tokenAudit.getTokenScore()</td>
+														<td>@tokenAudit.getTokenMatchReason()</td>
+													</tr>
+													}
+													
+													@if(tokenAudit.doesTokenNeedAnalysis()) {
+													<tr class="token_failure">
+														<td>@tokenAudit.getSourceTokens()</td>
+														<td>@tokenAudit.getTargetTokens()</td>
+														<td>@tokenAudit.getTokenScore()</td>
+														<td>@tokenAudit.getTokenMatchReason()</td>
+													</tr>
+													}
+												} <!--  End token!= null check -->
+											} <!-- End actual token iteration -->
+										</tbody>
+									</table>
+							
+						} <!-- End token iteration -->
+						
+						<!-- Handle the case where no tokens are present for a clause -->
+						@if(clauseAudit.getAuditTokenValues() == null || clauseAudit.getAuditTokenValues().isEmpty()) {
+							<table id="noTokenTable" class="table table-bordered table-condensed token">
+							<tbody 	rel="popover" 
+									data-original-title="<b>SUBRULE DATA TO MATCH</b>" 
+									data-content="@(clauseAudit.getClauseAttrValuesHTML())">
+								<tr class="error">
+									<td>No tokens found because source attribute missing in the itempair !!</td>
+								</tr>
+							</tbody>		
+							</table>
+						}
+						</div> <!-- End of clause div -->
+					} <!-- End clausAudit != null --> 
+				}  <!-- End clause iteration -->
+				</div>
+				
+			}  <!-- End rule itertaion  -->
+			</div> <!-- Div for an itempair -->
+		} <!-- End itempair -->
+</div>
+</td></tr></table>
+<script type="text/javascript">
+     
+     // function to respond to the itempair dropdown filters
+     function itemPairEventHandler(itemPairFilterValue)
+     {
+     	// Show only mimatched itempairs
+     	if(itemPairFilterValue == "mismatched") {
+     		$('div.itempair_success').hide();
+     		$('div.itempair_failure').show();
+     	}
+     	// Show only matched itempairs
+     	else if (itemPairFilterValue == "matched") {
+       		$('div.itempair_failure').hide();
+     		$('div.itempair_success').show();
+     	}
+     	// Show all itempairs
+     	else {
+     		$('[class^="itempair_"]').show();
+     	}	
+     }
+     
+     // function to respond to the token dropdown filters
+     function tokenEventHandler(tokenFilterValue)
+     {
+     	// Show only failure tokens
+     	if(tokenFilterValue == "failure") {
+     		$('table tr.token_success').hide();
+     		$('table tr.token_failure').show();
+     	}
+     	// Show only success tokens
+     	else if (tokenFilterValue == "success") {
+     		$('table tr.token_failure').hide();
+     		$('table tr.token_success').show();
+     	}
+     	// Show all tokens
+     	else {
+     		$('[class^="token_"]').show();
+     	}
+     }
+     
+     // Catch item pair change events
+     $("#itempairs_match_result_type").on("change", function() {
+     	itemPairEventHandler(this.value);
+     });
+     
+     // Catch token change events
+     $("#token_match_result_type").on("change", function() {
+     	tokenEventHandler(this.value);
+     });
+          
+     // function to invoke the expand collapse functionality
+     function expandCollapseEventHandler(beforeToggleClass, iconParentDivs)
+     {
+        var divChildren = iconParentDivs.find('div');
+     	
+     	// Handle itempair expansion. Expand all visible children divs
+     	if(beforeToggleClass == "icon-plus-sign") {
+     		divChildren.show();
+     	}
+     	// Handle itempair collapse. Collapse all visible children divs
+     	else {
+     		divChildren.hide();
+     	}
+     }
+     
+     
+     // Handle expand/collapse itempairs
+     // Event delegation model optimization
+     $("div").on("click", "i.icon-plus-sign", function() {
+     	var beforeToggleClass = $(this).attr('class');
+     	var iconParentDivs = $(this).closest('div');
+
+		expandCollapseEventHandler(beforeToggleClass, iconParentDivs);
+				
+     	$(this).toggleClass("icon-minus-sign");
+     });
+	
+     // Load the summary pane when the web page laods.
+     $(document).ready(function () {
+         // load the rule summary table
+         $("#ruleStatsTable").tablesorter({sortList : [[1, 1]]});
+         
+         // load the clause summary table
+         $("#clauseStatsTable").tablesorter({sortList : [[1, 1]]});
+         
+         // apply the default itempair filter - show only mismatched itempairs
+         itemPairEventHandler("mismatched");
+         
+         // apply the default token filter - show all tokens
+         tokenEventHandler("all");
+         
+         // apply the initial expand collapse of data
+         var iconParentDivs = $("div i.icon-plus-sign").closest('div');
+         expandCollapseEventHandler("icon-minus-sign", iconParentDivs);
+         
+         // apply the popover to show additional metadata about the clause
+         $("div.clause_success .nav").popover({placement:'top', trigger: 'hover', html: true});
+         $("div.clause_failure .nav").popover({placement:'top', trigger: 'hover', html: true});
+
+		 // apply the popover to show the attribute values being matched
+         $("div.clause_success .table tbody").popover({placement:'top', trigger: 'hover', html: true});
+         $("div.clause_failure .table tbody").popover({placement:'top', trigger: 'hover', html: true});
+     });		
+	</script>
+}

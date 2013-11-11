@@ -1,0 +1,139 @@
+@( 
+	sourceItemDataSource : String,
+	targetItemDataSource : String,
+	sourceItemCommonAttrsMap : Map[String, String],
+	targetItemCommonAttrsMap : Map[String, String],
+	sourceItemSpecificAttrsMap :  Map[String, String],
+	targetItemSpecificAttrsMap :  Map[String, String]
+) 
+
+@import helper._ 
+
+@main(title = "Item Pair Details") {
+
+	<!-- Start itempair common attributes here -->
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div>
+				<ul class="nav">
+					<li><b><h4>ITEMPAIR COMMON ATTRIBUTES</h4></b></li>
+				</ul>
+	
+			</div>
+		</div>
+	</div> <!-- End of Summary Bar -->
+
+	<table id="itemPairCommonAttrsTable" class="table table-bordered table-condensed tablesorter">
+		<thead>
+			<tr>
+				<th class="span6">@sourceItemDataSource</th>
+				<th class="span6">@targetItemDataSource</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+			<td>
+			<table id="sourceItemCommonAttrsTable" class="table table-bordered table-condensed table-hover tablesorter">
+				<thead>
+					<tr>
+						<th class="span2">Attribute Name</th>
+						<th class="span4">Attribute Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for((key, value) <- sourceItemCommonAttrsMap) {
+					<tr>
+						<td>@key</td>
+						<td>@value</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+			</td>
+			<td>
+			<table id="targetItemCommonAttrsTable" class="table table-bordered table-condensed table-hover tablesorter">
+				<thead>
+					<tr>
+						<th class="span2">Attribute Name</th>
+						<th class="span4">Attribute Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for((key, value) <- targetItemCommonAttrsMap) {
+					<tr>
+						<td>@key</td>
+						<td>@value</td>
+					</tr>
+					}
+				</tbody>				
+			</table>
+			</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!-- Start itempair specific attributes here -->
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div>
+				<ul class="nav">
+					<li><b><h4>ITEMPAIR SOURCE SPECIFIC ATTRIBUTES</h4></b></li>
+				</ul>
+	
+			</div>
+		</div>
+	</div> <!-- End of Details Bar -->
+	
+	<table id="itemPairSpecificAttrsTable" class="table table-bordered table-condensed table-hover tablesorter">
+		<thead>
+			<tr>
+				<th class="span6">@sourceItemDataSource</th>
+				<th class="span6">@targetItemDataSource</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+			<td>
+			<table id="sourceItemSpecificAttrsTable" class="table table-bordered table-condensed table-hover tablesorter">
+				<thead>
+					<tr>
+						<th class="span2">Attribute Name</th>
+						<th class="span4">Attribute Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for((key, value) <- sourceItemSpecificAttrsMap) {
+					<tr>
+						<td>@key</td>
+						<td>@value</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+			</td>
+			<td>
+			
+			<table id="targetItemSpecificAttrsTable" class="table table-bordered table-condensed">
+				<thead>
+					<tr>
+						<th class="span2">Attribute Name</th>
+						<th class="span4">Attribute Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					@for((key, value) <- targetItemSpecificAttrsMap) {
+					<tr>
+						<td>@key</td>
+						<td>@value</td>
+					</tr>
+					}
+				</tbody>				
+			</table>
+			</td>
+			</tr>
+		</tbody>
+	</table>
+	
+}

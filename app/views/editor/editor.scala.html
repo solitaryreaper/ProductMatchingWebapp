@@ -1,0 +1,94 @@
+@(editorContent : String, editorState : String)
+
+@import helper._
+
+@main(title = "Product Matching Rule Language Editor") {
+ 
+<style type="text/css">
+  .CodeMirror {border: 1px solid #aaa;}
+</style>
+
+<div class="container-fluid">
+<div class="row-fluid">
+	<div class="span2"><button class="btn btn-info"><i class="icon-pencil"></i> &nbsp;  New</button></div>
+	<div class="span2"><button class="btn btn-info"><i class="icon-folder-open"></i> &nbsp; Open</button></div>
+	<div class="span2"><button class="btn btn-info"><i class="icon-briefcase"></i> &nbsp;  Save </button></div>
+	<div class="span2"><button class="btn btn-info"><i class="icon-briefcase"></i> &nbsp;  Save As ..</button></div>
+</div>
+</div>
+
+<br/>
+
+<div class ="container-fluid">
+	<form method="post" class="form-horizontal" action="@routes.Editor.validateProductMatchingRules()">
+		<!-- Code editor area -->
+		<textarea class="span12" id="matching_rules_editor" name="matching_rules_editor" rows="40"></textarea>
+		<br />
+		
+		<!-- Rule validation  -->
+		<div class="container">
+			<div class="span4"></div>
+			<button type="submit" id="rule_validator" class="btn btn-primary span2">Validate Rules</button>
+		</div>
+	</form>
+</div>
+
+<br />
+<div id="error_message"></div>	
+
+
+<script type="text/javascript">
+
+	// Loads the code editor textarea with apt contents
+	function loadCodeEditor()
+	{
+		// JS code to invoke codemirror
+		var editor = CodeMirror.fromTextArea(document.getElementById("matching_rules_editor"), {
+			lineNumbers: true,
+	    	tabSize: 4,
+        	indentUnit: 4,
+        	indentWithTabs: true
+		});
+		
+		var content = "@editorContent";
+		editor.setValue(content);      
+	}
+	
+	// TODO : The File API buttons have not been finished yet !! 
+	$(".btn-info").on("click", function() {
+		alert("This feature is yet to be completed !! ");
+	});
+		
+	//Saves the product matching rule specified in textarea
+	//function saveRulesInFile(String content)
+	//{
+	//
+	//}
+	
+	// Opens an existing rule file and loads the content in rule editor
+	//function openRulesFromFile()
+	//{
+	//
+	//}
+		
+	$(document).ready(function() {
+		// Load the content to show in the editor
+		//$("#matching_rules_editor").val("@editorContent");
+	
+		loadCodeEditor();
+		
+		// Show proper alert message, if validation was invoked
+		var state = "@editorState";
+		if(state == "RULE_VALIDATION_PASSED") {
+			message = "SUCCESS. Product matching rules passed validation !! ";
+			$("#error_message").html('<div class="alert alert-success"><a class="close" data-dismiss="alert">x</a><strong>'+ message +'</strong></div>');			
+		}
+		else if(state == "RULE_VALIDATION_FAILED") {
+			message = "ERROR. Product matching rules failed validation !!";
+			$("#error_message").html('<div class="alert alert-error"><a class="close" data-dismiss="alert">x</a><strong>'+ message +'</strong></div>');			
+		}
+	});
+	
+	
+</script>
+}

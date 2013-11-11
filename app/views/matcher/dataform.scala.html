@@ -1,0 +1,51 @@
+@import helper._
+
+@main(title = "Product Matching Tool") {
+    <form method="post" class="form-horizontal container-fluid" action="@routes.Matcher.invokeAdHocDataMatch()">
+    <fieldset>
+    	<legend>Product Match Trial Form</legend>
+    	
+    	<div class="row-fluid">
+    	
+          <div id="rule_data_box" class="control-group span6">  
+            <label class="control-label" for="rule_data"><b>Rule Data</b></label>  
+            <div class="controls">  
+              <textarea class="input-xlarge" id="rule_data" name="rule_data" rows="14" placeholder="Insert product matching rules strictly in the correct format .." required></textarea>                
+            </div>  
+          </div> 
+
+          <div id="item_data_box" class="control-group span6">  
+            <label class="control-label" for="item_data"><b>Item Data</b></label>  
+            <div class="controls">  
+              <textarea class="input-xlarge" id="item_data" name="item_data" rows="14" placeholder="Insert itempair data strictly in the correct format .." required></textarea>                
+            </div>  
+          </div>
+           
+		</div>
+		
+		<div class="container">
+          <div class="control-group">  
+            <label class="control-label" for="trial_id"><b>Trial Name</b></label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="trial_name" name="trial_name" placeholder="Add a unique trial name for reference .." required>  
+            </div>  
+          </div> 
+
+            <div class="control-group">  
+            <label class="control-label" for="trial_desc"><b>Trial Description</b></label>  
+            <div class="controls">  
+              <textarea class="input-xlarge" id="trial_desc" name="trial_desc" rows="3" placeholder="Add a short description of this trial here .." required></textarea>  
+            </div>  
+          </div>  
+
+          <div class="form-actions">  
+            <button id="product_match_invoker" type="submit" class="btn btn-primary">Start Product Matching Trial</button>  
+          </div>  
+		</div>
+		
+		</fieldset>
+    </form>
+    
+    <div id="error_message"></div>
+    
+}

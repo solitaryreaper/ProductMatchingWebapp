@@ -1,0 +1,156 @@
+/* Add styling specific to webapp here */
+#ruleStatsTable {
+	height: 100px;
+	width: 300px;
+    overflow: auto;
+}
+
+#clauseStatsTable {
+	height: 100px;
+    overflow: auto;
+}
+
+#matchSummaryGraph {
+	width: 450px;
+}
+
+body {
+  font-family:arial;
+  font-size: 10pt;
+}
+
+#matchSummaryTable {
+	height: 200px;
+}
+
+td
+{
+    padding:15px;   
+}
+
+.table {
+  font-family:arial;
+  font-size: 9pt;
+}
+
+#matchDetailedStats {
+    text-align: left;   
+}
+
+/* Override Twitter bootstrap components here*/
+/*
+.navbar .nav > li {
+  	display: block;
+  	float: none;
+	padding-top: 10px;
+	padding-right: 15px;
+	padding-bottom: 10px;
+	padding-left: 15px;
+}
+*/
+
+/*
+.navbar .navbar-inner {
+	background-color: #1F8BD5;
+	background-image : none;
+	font-size: 11pt;
+}
+*/
+
+#error_bar {
+	background-color: #da4f49;
+	background-image : none;
+	font-size: 11pt;
+}
+
+table.tablesorter thead tr th {
+	text-align : center;
+	font-size: 10pt;
+}
+
+table.tablesorter td {
+	font-size: 9pt;
+}
+
+#noTokenTable .error td{
+	text-align : center;
+	font-size: 10pt;
+	font-weight:bold;	
+}
+
+/* Create new classes here. These are just to identify the different kind of match entities . */
+
+.rule_success > ul li {
+	padding-left:1em;
+}
+
+.rule_failure > ul li {
+	padding-left:1em;
+}
+
+.clause_success > ul li {
+	padding-left:2em;
+}
+
+.clause_failure > ul li  {
+	padding-left:2em;
+}
+
+.token_success {
+	background-color : #B2D487;
+}
+
+.token_failure {
+	background-color : #FF9999;
+}
+
+.token {
+	padding-left:4em;
+}
+
+#error_table td{
+    text-align: left;   
+}
+
+.popover {
+	max-width: 800px;
+	width: auto;
+}
+
+.tooltip {
+	max-width: 800px;
+	width: auto;
+}
+
+.blue {
+  color: #0077b9;
+}
+
+.subtitle {
+  font-family:arial;
+  font-size: 20px;		
+}
+
+.header {
+  font-family:arial;
+  font-size: 14px;
+  font-weight:bold;  	
+}
+
+.footer {
+    text-align: center;		
+}
+
+
+.form-actions {
+	background-color: #ffffff;	
+}
+
+
+#rule_data_box .input-xlarge {
+	width:400px;
+}
+
+#item_data_box .input-xlarge {
+	width: 400px;
+}

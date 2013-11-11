@@ -1,0 +1,44 @@
+@import helper._
+
+@main(title = "Product Matching Tool") {
+    <form method="post" class="form-horizontal container" action="@routes.Matcher.invokeFileBasedDataMatch()" enctype="multipart/form-data">
+    <fieldset>
+    	<legend>Product Match Trial Form</legend>
+    	 <div class="control-group">  
+            <label class="control-label" for="rule_file_path"><b>Rule File</b></label>  
+            <div class="controls">  
+              <input class="input-file" id="rule_file_path" name = "rule_file_path" type="file" required>  
+            </div>  
+          </div>  
+
+    	 <div class="control-group">  
+            <label class="control-label" for="data_file_path"><b>Data File</b></label>  
+            <div class="controls">  
+              <input class="input-file" id="data_file_path" name="data_file_path" type="file" required>  
+            </div>  
+          </div>  
+
+          <div class="control-group">  
+            <label class="control-label" for="trial_id"><b>Trial Name</b></label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="trial_name" name="trial_name" placeholder="Add a unique trial name for reference .." required>  
+            </div>  
+          </div> 
+
+            <div class="control-group">  
+            <label class="control-label" for="trial_desc"><b>Trial Description</b></label>  
+            <div class="controls">  
+              <textarea class="input-xlarge" id="trial_desc" name="trial_desc" rows="3" placeholder="Add a short description of this trial here .." required></textarea>  
+            </div>  
+          </div>  
+
+          <div class="form-actions">  
+            <button id="product_match_invoker" type="submit" class="btn btn-primary">Start Product Matching Trial</button>  
+          </div>  
+
+		</fieldset>
+    </form>
+    
+    <div id="error_message"></div>
+    
+}
